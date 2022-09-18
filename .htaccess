@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteBase /
+<Files 'database.json'>
+deny from all
+</Files>
