@@ -11,7 +11,7 @@
 
         public function __construct($login, $password, $email, $name, $arr){
 			$this->login = $login;
-            $this->salt = $this->generateSalt();
+            $this->salt = '12345';
 			$this->password = md5($this->salt . $password);
             $this->email = $email;
             $this->name = $name;
@@ -51,7 +51,7 @@
                 echo($this->showMessage('Введён некоректный логин или пароль'));   // Попытка регистрации при пустой базе данных. Выдаём ошибку
             }else{
                     foreach($this->arr as $key=>$elem){
-                        if($key == $this->login or ($elem[3] . $elem[0]) == $this->password ){  // Проверка совпадения логина и пароля
+                        if($key == $this->login and $elem[0] == $this->password ){  // Проверка совпадения логина и пароля
                             $_SESSION['user']= $elem[2]; 
                             header('Location: content.php');
                             break;
@@ -66,7 +66,7 @@
 
         //Проведение регистрации и одновременная авторизация
         private function registerSuccess(){
-            $this->arr[$this-> login]=[$this-> password, $this-> email, $this-> name, $this-> salt];
+            $this->arr[$this-> login]=[$this-> password, $this-> email, $this-> name];
             file_put_contents('database.json', json_encode($this->arr));
             $_SESSION['user']= $this-> name;
             header('Location: content.php');
