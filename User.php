@@ -7,10 +7,12 @@
         private $email;
         private $name;
         private $arr;
+        private $salt;
 
         public function __construct($login, $password, $email, $name, $arr){
 			$this->login = $login;
-			$this->password = $password;
+            $this->salt = $this->generateSalt();
+			$this->password = md5($this->salt . $password);
             $this->email = $email;
             $this->name = $name;
             $this->arr= $arr;
@@ -49,7 +51,7 @@
                 echo($this->showMessage('Введён некоректный логин или пароль'));   // Попытка регистрации при пустой базе данных. Выдаём ошибку
             }else{
                     foreach($this->arr as $key=>$elem){
-                        if($key == $this->login or $elem[0] == $this->password ){  // Проверка совпадения логина и пароля
+                        if($key == $this->login or ($elem[3] . $elem[0]) == $this->password ){  // Проверка совпадения логина и пароля
                             $_SESSION['user']= $elem[2]; 
                             header('Location: content.php');
                             break;
@@ -64,11 +66,12 @@
 
         //Проведение регистрации и одновременная авторизация
         private function registerSuccess(){
-            $this->arr[$this-> login]=[$this-> password, $this-> email, $this-> name];
+            $this->arr[$this-> login]=[$this-> password, $this-> email, $this-> name, $this-> salt];
             file_put_contents('database.json', json_encode($this->arr));
             $_SESSION['user']= $this-> name;
             header('Location: content.php');
         }
+
 
         //Вывод сообщений
         private function showMessage($message){
@@ -79,6 +82,18 @@
                     </div>
                     ");
         }
+
+
+        //Генерация соли
+        private function generateSalt(){
+		$salt = '';
+		$saltLength = 8; // длина соли
+		for($i = 0; $i < $saltLength; $i++) {
+			$salt .= chr(mt_rand(33, 126)); // символ из ASCII-table
+		}
+		return $salt;
+	}
+
     }
 
 ?>
