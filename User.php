@@ -11,7 +11,7 @@
 
         public function __construct($login, $password, $email, $name, $arr){
 			$this->login = $login;
-            $this->salt = '12345';
+            $this->salt = 'ek7#!c4ф';
 			$this->password = md5($this->salt . $password);
             $this->email = $email;
             $this->name = $name;
