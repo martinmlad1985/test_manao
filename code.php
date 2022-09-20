@@ -1,7 +1,7 @@
 
 <?php
 	session_start();
-	require_once('User.php');
+	require('User.php');
 
 	if (!empty($_POST)) { 
 
@@ -15,9 +15,9 @@
 
 		//Проверка режима работы: регистрация или авторизация
 		if($user-> isRegister()){
-			$user-> register();
+			echo $user-> register();
 		}else{
-			$user-> auth();
+			echo $user-> auth();
 		}
 	}
 

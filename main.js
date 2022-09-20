@@ -10,6 +10,8 @@ function send() {
 }
 
 let form = document.querySelector('form');
+let error= document.getElementsByClassName('error');
+
 
 form.addEventListener('submit', function(event) {
 	let promise = fetch('code.php', {
@@ -21,8 +23,14 @@ form.addEventListener('submit', function(event) {
 		}
 	).then(
 		text => {
-            
+			if(text['status']){
+				location="content.php"
+			}else{
+				error[0].innerHTML= text['message'];
+				error[0].classList.toggle('show');
+				setTimeout( 'location="index.php";', 2000 );
+			}
 		}
 	);
-	
+	event.preventDefault();
 });

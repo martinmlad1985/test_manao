@@ -56,12 +56,17 @@ input {
     border-radius: 5px;
 }
 
-
-.error{
-    display: flex;
+.show{
+    display: flex !important;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+}
+
+
+.error{
+    display: none;
+    
     color: rgb(251, 12, 12);
     position: absolute;
     left: 50%;

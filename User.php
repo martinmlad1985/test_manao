@@ -7,12 +7,10 @@
         private $email;
         private $name;
         private $arr;
-        private $salt;
 
         public function __construct($login, $password, $email, $name, $arr){
 			$this->login = $login;
-            $this->salt = 'ek7#!c4ф';
-			$this->password = md5($this->salt . $password);
+			$this->password = $password;
             $this->email = $email;
             $this->name = $name;
             $this->arr= $arr;
@@ -32,33 +30,32 @@
         public function register(){     //---Регистрация
             if(!$this->arr){            //---Если база данных пуста, то производим регистрацию
                 $this-> registerSuccess();
+                return json_encode(array('status'=> true));
             }else{
                 foreach($this-> arr as $key=>$elem){
                     if($key == $_POST['login']){
-                        echo($this->showMessage('Такой логин уже есть'));     // Если зарегистрирован такой логин, то выдаём ошибку
+                        return json_encode(array('status'=> false, 'message'=>'Такой логин существует, выберите другой'));  // Если зарегистрирован такой логин, то выдаём ошибку
+                        break;
                     } 
-                    else{
-                        $this-> registerSuccess();   //Проводим регистрацию
-                    }
                 }
+                $this-> registerSuccess();   //Проводим регистрацию
+                return json_encode(array('status'=> true));
             }
         }
 
 
 
         public function auth(){
-            if(!$this->arr){
-                echo($this->showMessage('Введён некоректный логин или пароль'));   // Попытка регистрации при пустой базе данных. Выдаём ошибку
+            if(!$this->arr){    // Попытка регистрации при пустой базе данных. Выдаём ошибку
+                return json_encode(array('status'=> false, 'message'=>'Введён некорректный логин или пароль'));  
             }else{
                     foreach($this->arr as $key=>$elem){
-                        if($key == $this->login and $elem[0] == $this->password ){  // Проверка совпадения логина и пароля
-                            $_SESSION['user']= $elem[2]; 
-                            header('Location: content.php');
+                        if($key == $this->login and $elem[0] == md5($elem[3] . $this->password)){  // Проверка совпадения логина и пароля
+                            $_SESSION['user']= $elem[2];
+                            return json_encode(array('status'=> true));
                             break;
                         }
-                        else{
-                            echo($this->showMessage('Введён некоректный логин или пароль'));
-                        }
+                        return json_encode(array('status'=> false, 'message'=>'Введён некорректный логин или пароль'));  
                     }
                 }
         }
@@ -66,31 +63,23 @@
 
         //Проведение регистрации и одновременная авторизация
         private function registerSuccess(){
-            $this->arr[$this-> login]=[$this-> password, $this-> email, $this-> name];
-            file_put_contents('database.json', json_encode($this->arr));
+            $salt = $this->generateSalt(); // соль
+	        $passwordSalt = md5($salt . $this->password); // соленый пароль
+            $this->arr[$this-> login]=[$passwordSalt, $this-> email, $this-> name, $salt];
+            file_put_contents('database.json', json_encode($this->arr, JSON_FORCE_OBJECT));
             $_SESSION['user']= $this-> name;
-            header('Location: content.php');
         }
 
 
-        //Вывод сообщений
-        private function showMessage($message){
-            return ("
-                    <div class='error'>
-                        <p>$message</p>
-                        <a href='index.php' class='btn btn-primary'>Повторить</a>
-                    </div>
-                    ");
-        }
-
-
-        //Генерация соли
-        private function generateSalt(){
+        //Генерируем соль
+        private function generateSalt()	{
 		$salt = '';
 		$saltLength = 8; // длина соли
+		
 		for($i = 0; $i < $saltLength; $i++) {
 			$salt .= chr(mt_rand(33, 126)); // символ из ASCII-table
 		}
+		
 		return $salt;
 	}
 
