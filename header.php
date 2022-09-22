@@ -10,3 +10,5 @@
     <title>Test</title>
 </head>
 <body>
+
+    <noscript><p class="noscript">Внимание!!! JavaScript отключен. Отправка форм на сайте отключена</p></noscript>

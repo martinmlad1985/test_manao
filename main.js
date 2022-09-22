@@ -11,7 +11,17 @@ function send() {
 
 let form = document.querySelector('form');
 let error= document.getElementsByClassName('error');
+let submit= document.getElementsByClassName('submit');
+let input= document.getElementsByTagName('input');
 
+let check= form.dataset.check= true;
+if(check){
+	submit[0].classList.toggle('hide');
+}
+
+for(i=0; i<input.length; i++){
+	input[i].disabled= false;
+}
 
 form.addEventListener('submit', function(event) {
 	let promise = fetch('code.php', {
@@ -19,7 +29,9 @@ form.addEventListener('submit', function(event) {
 		body: new FormData(this),
 	}).then(
 		response => {
-			return response.json(); // ответ сервера
+			if (response.statusText == 'OK'){
+				return response.json(); // ответ сервера
+			}
 		}
 	).then(
 		text => {
@@ -28,9 +40,20 @@ form.addEventListener('submit', function(event) {
 			}else{
 				error[0].innerHTML= text['message'];
 				error[0].classList.toggle('show');
-				setTimeout( 'location="index.php";', 2000 );
+				setTimeout( ()=>{error[0].classList.toggle('show');}, 2000 );
 			}
 		}
 	);
 	event.preventDefault();
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -34,7 +34,11 @@
             }else{
                 foreach($this-> arr as $key=>$elem){
                     if($key == $_POST['login']){
-                        return json_encode(array('status'=> false, 'message'=>'Такой логин существует, выберите другой'));  // Если зарегистрирован такой логин, то выдаём ошибку
+                        return json_encode(array('status'=> false, 'message'=>'Такой логин уже существует, выберите другой'));  // Если зарегистрирован такой логин, то выдаём ошибку
+                        break;
+                    } 
+                    if($elem[1] == $_POST['email']){
+                        return json_encode(array('status'=> false, 'message'=>'Пользователь с таким e-mail уже существует'));  // Если зарегистрирован такой логин, то выдаём ошибку
                         break;
                     } 
                 }
@@ -55,8 +59,8 @@
                             return json_encode(array('status'=> true));
                             break;
                         }
-                        return json_encode(array('status'=> false, 'message'=>'Введён некорректный логин или пароль'));  
                     }
+                    return json_encode(array('status'=> false, 'message'=>'Введён некорректный логин или пароль'));  
                 }
         }
 
