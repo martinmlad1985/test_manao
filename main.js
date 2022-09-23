@@ -1,25 +1,23 @@
 
-function send() {
-    
-    let password= document.getElementById('password');
-    let confirm_password= document.getElementById('confirm_password');
-    if(password.value != confirm_password.value){
-        confirm_password.pattern= password.value;
-    }
+let password= document.getElementById('password');
+let confirm_password= document.getElementById('confirm_password');
 
-}
+password.addEventListener('blur', function(){   // поля password и confirm password должны совпадать
+        confirm_password.pattern= password.value;
+})
+
 
 let form = document.querySelector('form');
 let error= document.getElementsByClassName('error');
 let submit= document.getElementsByClassName('submit');
 let input= document.getElementsByTagName('input');
 
-let check= form.dataset.check= true;
+let check= form.dataset.check= true;  //// если JavaScript включен, делаем кнопку отправки формы видимой
 if(check){
-	submit[0].classList.toggle('hide');
+	submit[0].classList.toggle('hide'); 
 }
 
-for(i=0; i<input.length; i++){
+for(i=0; i<input.length; i++){   // если JavaScript включен, делаем инпуты формы активными
 	input[i].disabled= false;
 }
 

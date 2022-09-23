@@ -4,14 +4,12 @@ body {
     position: relative;
 }
 
-
 header {
     margin: 0 auto;
     padding-top: 20px;
     width: 800px;
     text-align: center;
 }
-
 
 .form, .greeting, .content {
     position: absolute;
@@ -66,7 +64,6 @@ input {
 .hide{
     display: none;
 }
-
 
 .error{
     display: none;

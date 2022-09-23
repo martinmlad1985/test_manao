@@ -11,13 +11,9 @@
             }else{
                 header('Location: index.php'); 
             }
-            
         ?>
         <a href="logout.php" class="btn btn-primary">Выйти</a>
     </div>
-
-
-
 
     </body>
 </html>
